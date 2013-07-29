@@ -9,10 +9,10 @@ It is ready to be deployed in Heroku.
 
 It currently does not handle streaming APIs.
 
-features:
-  Authenticate with Twitter
-  Relay Twitter API appending CORS
-  Issue a token for Firebase
+Features:
+- Authenticate with Twitter
+- Relay Twitter API appending CORS
+- Issue a token for Firebase
 
 Install
 -------
