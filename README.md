@@ -22,6 +22,7 @@ npm install
 # edit config properly
 vim ./src/config.coffee
 cake build
+git commit -a
 
 # deploy on heroku
 heroku create
