@@ -1,9 +1,6 @@
 Corsèt
 ======
 
-Description
------------
-
 This is a Twitter CORS proxy server.
 It is ready to be deployed in Heroku.
 
