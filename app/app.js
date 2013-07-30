@@ -18,17 +18,6 @@
 
   redisAuth = redisUrl.auth ? redisUrl.auth.split(':') : void 0;
 
-  app.use(express.cookieParser(config.sessionSecret));
-
-  app.use(express.session({
-    store: new RedisStore({
-      host: redisUrl.hostname,
-      port: redisUrl.port,
-      db: redisAuth != null ? redisAuth[0] : void 0,
-      pass: redisAuth != null ? redisAuth[1] : void 0
-    })
-  }));
-
   app.use(function(req, res, next) {
     res.set({
       'Access-Control-Allow-Origin': config.originUrl,
@@ -46,6 +35,17 @@
       return next();
     }
   });
+
+  app.use(express.cookieParser(config.sessionSecret));
+
+  app.use(express.session({
+    store: new RedisStore({
+      host: redisUrl.hostname,
+      port: redisUrl.port,
+      db: redisAuth != null ? redisAuth[0] : void 0,
+      pass: redisAuth != null ? redisAuth[1] : void 0
+    })
+  }));
 
   app.use(express.bodyParser());
 

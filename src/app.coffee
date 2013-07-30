@@ -8,14 +8,6 @@ url = require 'url'
 redisUrl = url.parse process.env.REDISTOGO_URL
 redisAuth = if redisUrl.auth then redisUrl.auth.split(':')
 
-app.use express.cookieParser config.sessionSecret
-app.use express.session
-    store: new RedisStore
-        host: redisUrl.hostname
-        port: redisUrl.port
-        db: redisAuth?[0]
-        pass: redisAuth?[1]
-        
 app.use (req, res, next) ->
     res.set
         'Access-Control-Allow-Origin': config.originUrl
@@ -27,6 +19,13 @@ app.use (req, res, next) ->
     else
         next()
 
+app.use express.cookieParser config.sessionSecret
+app.use express.session
+    store: new RedisStore
+        host: redisUrl.hostname
+        port: redisUrl.port
+        db: redisAuth?[0]
+        pass: redisAuth?[1]
 app.use express.bodyParser()
         
 oa = new OAuth(
