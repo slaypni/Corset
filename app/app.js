@@ -29,6 +29,24 @@
     })
   }));
 
+  app.use(function(req, res, next) {
+    res.set({
+      'Access-Control-Allow-Origin': config.originUrl,
+      'Access-Control-Allow-Credentials': true
+    });
+    if (req.get('Access-Control-Request-Headers')) {
+      res.set('Access-Control-Allow-Headers', req.get('Access-Control-Request-Headers'));
+    }
+    if (req.get('Access-Control-Request-Method')) {
+      res.set('Access-Control-Allow-Method', req.get('Access-Control-Request-Method'));
+    }
+    if (req.method.toUpperCase() === 'OPTIONS') {
+      return res.send(200);
+    } else {
+      return next();
+    }
+  });
+
   app.use(express.bodyParser());
 
   oa = new OAuth('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', config.oauthConsumerKey, config.oauthConsumerSecret, '1.0A', "" + process.env.URL + "/auth/callback", 'HMAC-SHA1');
@@ -61,10 +79,6 @@
 
   apiCallback = function(req, res) {
     return function(error, data, response) {
-      res.set({
-        'Access-Control-Allow-Origin': config.originUrl,
-        'Access-Control-Allow-Credentials': true
-      });
       if (error) {
         console.log(error.statusCode);
         return res.send(error.statusCode, data);

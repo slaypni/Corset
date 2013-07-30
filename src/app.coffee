@@ -15,6 +15,18 @@ app.use express.session
         port: redisUrl.port
         db: redisAuth?[0]
         pass: redisAuth?[1]
+        
+app.use (req, res, next) ->
+    res.set
+        'Access-Control-Allow-Origin': config.originUrl
+        'Access-Control-Allow-Credentials': true  # withCredentials of xhr must be set true
+    res.set 'Access-Control-Allow-Headers', req.get 'Access-Control-Request-Headers' if req.get 'Access-Control-Request-Headers'
+    res.set 'Access-Control-Allow-Method', req.get 'Access-Control-Request-Method' if req.get 'Access-Control-Request-Method'
+    if req.method.toUpperCase() == 'OPTIONS'
+        res.send 200
+    else
+        next()
+
 app.use express.bodyParser()
         
 oa = new OAuth(
@@ -54,9 +66,6 @@ app.get '/auth', (req, res) ->
 
 apiCallback = (req, res) ->
     return (error, data, response) ->
-        res.set
-            'Access-Control-Allow-Origin': config.originUrl
-            'Access-Control-Allow-Credentials': true  # withCredentials of xhr must be set true
         if error
             console.log error.statusCode
             res.send error.statusCode, data
