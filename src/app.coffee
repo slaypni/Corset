@@ -50,6 +50,7 @@ app.get '/auth/callback', (req, res) ->
             else
                 req.session.oauthAccessToken = oauthAccessToken
                 req.session.oauthAccessTokenSecret = oauthAccessTokenSecret
+                req.session.id = null
                 res.redirect config.callbackUrl
     )
 
@@ -97,21 +98,24 @@ if config.firebaseSecret
     FirebaseTokenGenerator = require 'firebase-token-generator'
     tokenGenerator = new FirebaseTokenGenerator config.firebaseSecret
     app.get '/auth/firebase', (req, res) ->
-        oa.get(
-            'https://api.twitter.com/1.1/account/verify_credentials.json',
-            req.session.oauthAccessToken,
-            req.session.oauthAccessTokenSecret,
-            (error, data, response) ->
-                if error
-                    console.log error
-                    res.send error.statusCode
-                else if response.statusCode == 200
-                    d = JSON.parse data
-                    token = tokenGenerator.createToken {id: d.id}
-                    res.send token
-                else
-                    res.send response.statusCode
-        )
+        if req.session.id?
+            res.send tokenGenerator.createToken {id: req.session.id}
+        else
+            oa.get(
+                'https://api.twitter.com/1.1/account/verify_credentials.json',
+                req.session.oauthAccessToken,
+                req.session.oauthAccessTokenSecret,
+                (error, data, response) ->
+                    if error
+                        console.log error
+                        res.send error.statusCode
+                    else if response.statusCode == 200
+                        d = JSON.parse data
+                        req.session.id = d.id
+                        res.send tokenGenerator.createToken {id: d.id}
+                    else
+                        res.send response.statusCode
+            )
         
 app.get '/', (req, res) ->
     res.send 'Corsèt'
