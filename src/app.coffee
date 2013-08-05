@@ -65,11 +65,11 @@ app.get '/auth', (req, res) ->
 
 apiCallback = (req, res) ->
     return (error, data, response) ->
+        res.set 'Access-Control-Expose-Headers', (header for header of response.headers).join ', '
+        res.set response.headers
         if error
-            console.log error.statusCode
             res.send error.statusCode, data
         else
-            res.set response.headers
             res.end data
 
 app.get /^\/api\/(.*)$/, (req, res) ->

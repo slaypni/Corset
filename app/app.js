@@ -79,11 +79,19 @@
 
   apiCallback = function(req, res) {
     return function(error, data, response) {
+      var header;
+      res.set('Access-Control-Expose-Headers', ((function() {
+        var _results;
+        _results = [];
+        for (header in response.headers) {
+          _results.push(header);
+        }
+        return _results;
+      })()).join(', '));
+      res.set(response.headers);
       if (error) {
-        console.log(error.statusCode);
         return res.send(error.statusCode, data);
       } else {
-        res.set(response.headers);
         return res.end(data);
       }
     };
