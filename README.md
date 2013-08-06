@@ -25,5 +25,5 @@ git commit -a
 heroku create
 heroku addons:add redistogo:nano
 heroku config:set URL=http://your-server-name.herokuapp.com
-git heroku push master
+git push heroku master
 ```
