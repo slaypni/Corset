@@ -100,7 +100,7 @@
 
   app.get(/^\/api\/(.*)$/, function(req, res) {
     var m;
-    m = req.url.match(/\/api\/(.*)$/);
+    m = req.url.match(/^\/api\/(.*)$/);
     return oa.get("https://api.twitter.com/" + m[1], req.session.oauthAccessToken, req.session.oauthAccessTokenSecret, apiCallback(req, res));
   });
 
@@ -109,7 +109,7 @@
     if ('application/x-www-form-urlencoded' !== req.get('Content-Type').trim()) {
       return res.send(400, 'Content-Type must be application/x-www-form-urlencoded');
     } else {
-      m = req.url.match(/\/api\/(.*)$/);
+      m = req.url.match(/^\/api\/(.*)$/);
       return oa.post("https://api.twitter.com/" + m[1], req.session.oauthAccessToken, req.session.oauthAccessTokenSecret, req.body, null, apiCallback(req, res));
     }
   });
