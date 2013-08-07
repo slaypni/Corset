@@ -74,8 +74,9 @@ apiCallback = (req, res) ->
             res.end data
 
 app.get /^\/api\/(.*)$/, (req, res) ->
+    m = req.url.match /\/api\/(.*)$/
     oa.get(
-        "https://api.twitter.com/#{req.params[0]}",
+        "https://api.twitter.com/#{m[1]}",
         req.session.oauthAccessToken,
         req.session.oauthAccessTokenSecret,
         apiCallback req, res
@@ -85,8 +86,9 @@ app.post /^\/api\/(.*)$/, (req, res) ->
     if 'application/x-www-form-urlencoded' != req.get('Content-Type').trim()
         res.send 400, 'Content-Type must be application/x-www-form-urlencoded'
     else
+        m = req.url.match /\/api\/(.*)$/
         oa.post(
-            "https://api.twitter.com/#{req.params[0]}",
+            "https://api.twitter.com/#{m[1]}",
             req.session.oauthAccessToken,
             req.session.oauthAccessTokenSecret,
             req.body,
