@@ -50,7 +50,7 @@ app.get '/auth/callback', (req, res) ->
             else
                 req.session.oauthAccessToken = oauthAccessToken
                 req.session.oauthAccessTokenSecret = oauthAccessTokenSecret
-                req.session.id = null
+                req.session.id_str = null
                 res.redirect config.callbackUrl
     )
 
@@ -100,8 +100,8 @@ if config.firebaseSecret
     FirebaseTokenGenerator = require 'firebase-token-generator'
     tokenGenerator = new FirebaseTokenGenerator config.firebaseSecret
     app.get '/auth/firebase', (req, res) ->
-        if req.session.id?
-            res.send tokenGenerator.createToken {id: req.session.id}
+        if req.session.id_str?
+            res.send tokenGenerator.createToken {id: req.session.id_str}
         else
             oa.get(
                 'https://api.twitter.com/1.1/account/verify_credentials.json',
@@ -113,8 +113,8 @@ if config.firebaseSecret
                         res.send error.statusCode
                     else if response.statusCode == 200
                         d = JSON.parse data
-                        req.session.id = d.id
-                        res.send tokenGenerator.createToken {id: d.id}
+                        req.session.id_str = d.id_str
+                        res.send tokenGenerator.createToken {id: d.id_str}
                     else
                         res.send response.statusCode
             )

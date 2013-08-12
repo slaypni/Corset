@@ -59,7 +59,7 @@
       } else {
         req.session.oauthAccessToken = oauthAccessToken;
         req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
-        req.session.id = null;
+        req.session.id_str = null;
         return res.redirect(config.callbackUrl);
       }
     });
@@ -118,9 +118,9 @@
     FirebaseTokenGenerator = require('firebase-token-generator');
     tokenGenerator = new FirebaseTokenGenerator(config.firebaseSecret);
     app.get('/auth/firebase', function(req, res) {
-      if (req.session.id != null) {
+      if (req.session.id_str != null) {
         return res.send(tokenGenerator.createToken({
-          id: req.session.id
+          id: req.session.id_str
         }));
       } else {
         return oa.get('https://api.twitter.com/1.1/account/verify_credentials.json', req.session.oauthAccessToken, req.session.oauthAccessTokenSecret, function(error, data, response) {
@@ -130,9 +130,9 @@
             return res.send(error.statusCode);
           } else if (response.statusCode === 200) {
             d = JSON.parse(data);
-            req.session.id = d.id;
+            req.session.id_str = d.id_str;
             return res.send(tokenGenerator.createToken({
-              id: d.id
+              id: d.id_str
             }));
           } else {
             return res.send(response.statusCode);
