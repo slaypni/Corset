@@ -31,13 +31,13 @@ git push heroku master
 How to use
 ----------
 
-Before calling Twitter APIs, It is necessary to Authenticate the client via Corsèt.
+Before calling Twitter APIs, It is necessary to authenticate clients via Corsèt.
 the url for authentication is "/auth".
 
-After finish Twitter authentication, clients can call APIs.
-It stores client secrets and access tokens on server-side not on client-side.
+After the authentication, clients can call APIs.
+Corsèt stores client secrets and access tokens on server-side not on client-side.
 Each client has session between Corsèt to be identified.
-Therefore XHR calling APIs must be set .withCredentials = true.
+Therefore XHR calling APIs must set .withCredentials = true.
 Now, you can call APIs by replacing "https://api.twitter.com" with "http://your-server-name.herokuapp.com/api".
 
 As an option, It can provide Firebase custom auth token via "/auth/firebase".
